@@ -412,7 +412,7 @@ function NodosPanel() {
         <button className="btn btn-fill" style={{ fontSize: 11 }} onClick={() => setShowCreate(v => !v)}>
           {showCreate ? <><X size={13} /> Cancelar</> : <><Plus size={13} /> Crear Nodo</>}
         </button>
-        <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={load}>↻</button>
+        <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={() => load()}>↻</button>
       </div>
 
       {error && (
@@ -778,7 +778,7 @@ function RelacionesPanel() {
         <button className="btn btn-fill" style={{ fontSize: 11 }} onClick={() => setShowCreate(v => !v)}>
           {showCreate ? <><X size={13} /> Cancelar</> : <><Plus size={13} /> Crear Relación</>}
         </button>
-        <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={load}>↻</button>
+        <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={() => load()}>↻</button>
       </div>
 
       {error && (
