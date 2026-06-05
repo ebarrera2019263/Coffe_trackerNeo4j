@@ -1,0 +1,4 @@
+lote_id,codigo_lote,proceso,puntaje_sca,notas_cata,fecha_cosecha,peso_kg,cafeteria_id,finca_id,tostador_id,beneficio_id
+L99931,CSV-HUE-0031,Lavado,86,chocolate;frutos rojos,2024-02-10,280,C001,F0001,T000,B000
+L99932,CSV-ANT-0032,Natural,91,caramelo;ciruela;miel,2024-01-20,350,C002,F0002,T001,B001
+L99933,CSV-SAC-0033,Honey,88,vainilla;nuez;naranja,2024-03-05,410,C003,F0003,T002,B002

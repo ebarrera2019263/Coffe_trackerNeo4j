@@ -1,0 +1,8 @@
+type,label,rel_type,from_label,from_id,to_label,to_id,extra_props
+node,Lote,,,,,,lote_id=L99921|codigo_lote=CSV-ANT-0021|proceso=Natural|puntaje_sca=92|notas_cata=jazmín;frutos rojos;bergamota|fecha_cosecha=2024-06-01|peso_kg=410
+node,Transporte,,,,,,transporte_id=TR99921|medio=Camion|fecha_salida=2024-07-10|fecha_llegada=2024-07-12|distancia_km=195
+rel,,SIRVE,Cafeteria,C005,Lote,L99921,,
+rel,,PRODUJO,Finca,F0010,Lote,L99921,,
+rel,,TOSTO,Tostador,T003,Lote,L99921,,
+rel,,PROCESO,Beneficio,B004,Lote,L99921,,
+rel,,TRANSPORTO,Transporte,TR99921,Lote,L99921,,

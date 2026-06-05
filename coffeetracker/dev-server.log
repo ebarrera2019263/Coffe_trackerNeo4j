@@ -1,0 +1,161 @@
+
+> coffeetracker@0.1.0 dev
+> next dev --turbopack
+
+   ▲ Next.js 15.5.15 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.56.1:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 2.7s
+ ○ Compiling /api/trazabilidad/[lote_id] ...
+ ✓ Compiled /api/trazabilidad/[lote_id] in 4.1s
+ GET /api/trazabilidad/GT-FRA-6570 200 in 7778ms
+ GET /api/trazabilidad/L00000 200 in 830ms
+ GET /api/trazabilidad/GT-RAI-1448 200 in 808ms
+ GET /api/trazabilidad/NO-EXISTE-000 404 in 763ms
+ ○ Compiling / ...
+ ✓ Compiled / in 5.1s
+ GET / 200 in 6804ms
+ ○ Compiling /api/cafeterias ...
+ ✓ Compiled /api/cafeterias in 657ms
+ GET /api/cafeterias? 200 in 1556ms
+ ○ Compiling /trazabilidad ...
+ ✓ Compiled /trazabilidad in 718ms
+ GET /trazabilidad 200 in 1057ms
+ ○ Compiling /finca ...
+ ✓ Compiled /finca in 758ms
+ GET /finca 200 in 1099ms
+ ○ Compiling /admin ...
+ ✓ Compiled /admin in 691ms
+ GET /admin 200 in 987ms
+ ○ Compiling /api/admin/nodos ...
+ ✓ Compiled /api/admin/nodos in 703ms
+ GET /api/admin/nodos?label=Cafeteria 200 in 1632ms
+ GET /api/admin/nodos?label=Cafeteria 200 in 987ms
+ GET /api/admin/nodos?label=Finca 200 in 994ms
+ GET /finca 200 in 437ms
+ ○ Compiling /finca/[finca_id] ...
+ ✓ Compiled /finca/[finca_id] in 609ms
+ GET /finca/F0000 200 in 2177ms
+ ○ Compiling /api/finca/[finca_id] ...
+ ✓ Compiled /api/finca/[finca_id] in 1044ms
+ GET /api/finca/F0000 200 in 3297ms
+ GET /api/finca/F0000 200 in 852ms
+ ○ Compiling /trazabilidad/[lote_id] ...
+ ✓ Compiled /trazabilidad/[lote_id] in 725ms
+ GET /trazabilidad/L00897 200 in 2209ms
+ GET /api/trazabilidad/L00897 200 in 799ms
+ GET /api/trazabilidad/L00897 200 in 913ms
+ GET /finca 200 in 909ms
+ GET /trazabilidad 200 in 448ms
+ GET /admin 200 in 578ms
+ GET /api/admin/nodos?label=Cafeteria 200 in 1083ms
+ GET /api/admin/nodos?label=Cafeteria 200 in 818ms
+ GET /api/admin/nodos?label=Lote 200 in 887ms
+ GET /trazabilidad 200 in 433ms
+ GET /api/trazabilidad/GT-FRA-6570 200 in 837ms
+ GET /trazabilidad/GT-FRA-6570 200 in 781ms
+ GET /api/trazabilidad/GT-FRA-6570 200 in 882ms
+ GET /api/trazabilidad/GT-FRA-6570 200 in 910ms
+ GET /admin 200 in 392ms
+ GET /api/admin/nodos?label=Cafeteria 200 in 895ms
+ ○ Compiling /impacto ...
+ GET /api/admin/nodos?label=Cafeteria 200 in 1213ms
+ ✓ Compiled /impacto in 1072ms
+ GET /impacto 200 in 1458ms
+ ✓ Compiled /api/impacto in 329ms
+ GET /api/impacto?finca_id=F0000 200 in 980ms
+ GET /admin 200 in 1168ms
+ GET /api/admin/nodos?label=Cafeteria 200 in 3064ms
+ GET /api/admin/nodos?label=Cafeteria 200 in 2313ms
+ GET /api/admin/nodos?label=Transporte 200 in 2976ms
+ GET /api/admin/nodos?label=Certificacion 200 in 1515ms
+ GET /api/admin/nodos?label=Transporte 200 in 1716ms
+ GET /api/admin/nodos?label=Transporte 200 in 1434ms
+ GET /api/admin/nodos?label=Cafeteria 200 in 1634ms
+ ○ Compiling /api/admin/relaciones ...
+ ✓ Compiled /api/admin/relaciones in 1868ms
+ GET /api/admin/relaciones?type=SIRVE 200 in 8986ms
+ GET /api/admin/relaciones?type=COMPRO 200 in 2202ms
+ POST /api/admin/nodos 201 in 2582ms
+ POST /api/admin/nodos 201 in 2101ms
+[POST /api/admin/nodos] Error [Neo4jError]: Node(5045) already exists with label `Certificacion` and property `cert_id` = 'CRT-TEST'
+    at runQuery (lib\neo4j.ts:25:34)
+    at POST (app\api\admin\nodos\route.ts:41:35)
+  23 |   })
+  24 |   try {
+> 25 |     const result = await session.run(cypher, params)
+     |                                  ^
+  26 |     return result.records.map((r) => serializeValue(r.toObject()) as T)
+  27 |   } finally {
+  28 |     await session.close() {
+  constructor: [Function],
+  gqlStatus: '22N79',
+  gqlStatusDescription: "error: data exception - property uniqueness constraint violated. Property uniqueness constraint violated: Node(5045) already exists with label `Certificacion` and property `cert_id` = 'CRT-TEST'.",
+  diagnosticRecord: [Object],
+  classification: 'CLIENT_ERROR',
+  rawClassification: 'CLIENT_ERROR',
+  code: 'Neo.ClientError.Schema.ConstraintValidationFailed',
+  retriable: false,
+  retryable: false,
+  containsGqlCause: [Function (anonymous)],
+  findByGqlStatus: [Function (anonymous)],
+  [cause]: [Error [GQLError]: 22N80: Index entry conflict: Node(5045) already exists with label `Certificacion` and property `cert_id` = 'CRT-TEST'.] {
+    constructor: [Function: GQLError],
+    cause: undefined,
+    gqlStatus: '22N80',
+    gqlStatusDescription: "error: data exception - index entry conflict. Index entry conflict: Node(5045) already exists with label `Certificacion` and property `cert_id` = 'CRT-TEST'.",
+    diagnosticRecord: {
+      OPERATION: '',
+      OPERATION_CODE: '0',
+      CURRENT_SCHEMA: '/',
+      _classification: 'CLIENT_ERROR'
+    },
+    classification: 'CLIENT_ERROR',
+    rawClassification: 'CLIENT_ERROR',
+    containsGqlCause: [Function (anonymous)],
+    findByGqlStatus: [Function (anonymous)]
+  }
+}
+ POST /api/admin/nodos 500 in 2976ms
+ POST /api/admin/nodos 201 in 1234ms
+ POST /api/admin/nodos 201 in 1264ms
+ POST /api/admin/nodos 201 in 1423ms
+ POST /api/admin/nodos 201 in 2224ms
+ GET /api/admin/nodos?label=Beneficio 200 in 1659ms
+ PUT /api/admin/nodos 200 in 1410ms
+ POST /api/admin/nodos 201 in 1469ms
+ PUT /api/admin/nodos 200 in 1250ms
+ PATCH /api/admin/nodos 200 in 1896ms
+ GET /api/admin/relaciones?type=SIRVE 200 in 2901ms
+ POST /api/admin/relaciones 404 in 2135ms
+ GET /api/admin/nodos?label=Finca 200 in 1734ms
+ POST /api/admin/relaciones 404 in 1905ms
+ POST /api/admin/relaciones 201 in 1299ms
+ PUT /api/admin/relaciones 200 in 1395ms
+ PUT /api/admin/relaciones 200 in 1395ms
+ DELETE /api/admin/relaciones 200 in 1868ms
+ DELETE /api/admin/nodos 200 in 1160ms
+ DELETE /api/admin/nodos 200 in 1735ms
+ POST /api/admin/nodos 201 in 1905ms
+ POST /api/admin/nodos 201 in 1798ms
+ POST /api/admin/nodos 201 in 1365ms
+ POST /api/admin/nodos 201 in 1886ms
+ POST /api/admin/relaciones 201 in 1568ms
+ POST /api/admin/relaciones 201 in 1698ms
+ DELETE /api/admin/nodos 200 in 1328ms
+ DELETE /api/admin/nodos 200 in 1998ms
+ DELETE /api/admin/nodos 200 in 1744ms
+ DELETE /api/admin/nodos 200 in 1636ms
+ GET /api/admin/nodos?label=Cafeteria 200 in 1697ms
+ POST /api/admin/nodos 201 in 2294ms
+ GET /api/admin/nodos?label=Cafeteria 200 in 3764ms
+ GET /api/admin/nodos?label=Cafeteria 200 in 3838ms
+ GET /api/admin/nodos?label=Cafeteria 200 in 4263ms
+ DELETE /api/admin/nodos 200 in 1440ms
+ GET /api/admin/nodos?label=Cafeteria 200 in 2499ms
+ POST /api/admin/nodos 201 in 1571ms
+ GET /api/admin/nodos?label=Cafeteria 200 in 1945ms
+ DELETE /api/admin/nodos 200 in 1949ms
