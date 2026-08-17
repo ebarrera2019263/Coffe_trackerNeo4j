@@ -253,8 +253,11 @@ export default function GraphView() {
                   router.push(`/trazabilidad/${encodeURIComponent(node.codigo)}`)
                 }
               }}
-              cooldownTicks={200}
-              warmupTicks={60}
+              d3AlphaDecay={0.035}
+              d3VelocityDecay={0.55}
+              d3AlphaMin={0.015}
+              cooldownTicks={250}
+              warmupTicks={80}
             />
           )
         )}
