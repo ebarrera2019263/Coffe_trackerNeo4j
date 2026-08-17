@@ -38,6 +38,22 @@ const navItems = [
     ),
   },
   {
+    href: '/graph',
+    label: 'Graph Explorer',
+    icon: (
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
+        <circle cx="4" cy="4" r="2" />
+        <circle cx="12" cy="5" r="2" />
+        <circle cx="6" cy="12" r="2" />
+        <circle cx="13" cy="12" r="1.5" />
+        <line x1="5.5" y1="5.2" x2="10.5" y2="5" />
+        <line x1="4.8" y1="5.8" x2="5.6" y2="10.4" />
+        <line x1="7.8" y1="11.4" x2="11.5" y2="12" />
+        <line x1="12.4" y1="6.8" x2="13" y2="10.5" />
+      </svg>
+    ),
+  },
+  {
     href: '/impacto',
     label: 'Impact',
     icon: (
@@ -83,7 +99,7 @@ export default function Sidebar() {
 
       <nav className="sidebar-nav">
         <div className="nav-label">Explore</div>
-        {navItems.slice(0, 3).map((item) => (
+        {navItems.slice(0, 4).map((item) => (
           <Link
             key={item.href}
             href={item.href}
@@ -95,7 +111,7 @@ export default function Sidebar() {
         ))}
 
         <div className="nav-label" style={{ marginTop: 8 }}>Analysis</div>
-        {navItems.slice(3).map((item) => (
+        {navItems.slice(4).map((item) => (
           <Link
             key={item.href}
             href={item.href}
