@@ -41,11 +41,11 @@ export default function FincaSearch() {
       <div style={{ maxWidth: 520, margin: '40px auto', textAlign: 'center' }}>
         <Leaf size={52} color="var(--text-pale)" style={{ marginBottom: 16 }} />
         <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 500, color: 'var(--text-dark)', marginBottom: 8 }}>
-          Vista inversa de finca
+          Reverse farm view
         </h2>
         <p style={{ fontSize: 13.5, color: 'var(--text-mid)', lineHeight: 1.7, marginBottom: 24 }}>
-          Dado el ID de una finca, descubre en qué cafeterías<br />
-          se sirve actualmente el café que produjo.
+          Given a farm ID, discover which coffee shops<br />
+          are currently serving the coffee it produced.
         </p>
 
         <form onSubmit={handleSearch} style={{ display: 'flex', gap: 10, marginBottom: 14 }}>
@@ -54,9 +54,9 @@ export default function FincaSearch() {
             onChange={setQuery}
             onSelect={handleSelect}
             suggestions={suggestions}
-            placeholder="ID de finca (ej. FINCA-001)"
+            placeholder="Farm ID (e.g. FINCA-001)"
           />
-          <button className="btn btn-fill" type="submit">Buscar</button>
+          <button className="btn btn-fill" type="submit">Search</button>
         </form>
       </div>
     </div>

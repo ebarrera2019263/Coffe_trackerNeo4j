@@ -38,12 +38,12 @@ export default function ImpactoView() {
     setBuscado(false)
     try {
       const res = await fetch(`/api/impacto?finca_id=${encodeURIComponent(trimmed)}`)
-      if (!res.ok) throw new Error('Error al consultar impacto')
+      if (!res.ok) throw new Error('Error querying impact')
       const data = await res.json()
       setResultados(data)
       setBuscado(true)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Error desconocido')
+      setError(e instanceof Error ? e.message : 'Unknown error')
     } finally {
       setLoading(false)
     }
@@ -63,11 +63,11 @@ export default function ImpactoView() {
             <AlertTriangle size={28} color="var(--caramel)" />
           </div>
           <div>
-            <div className="section-title" style={{ marginBottom: 4 }}>Análisis de impacto por plaga</div>
+            <div className="section-title" style={{ marginBottom: 4 }}>Pest impact analysis</div>
             <p style={{ fontSize: 13, color: 'var(--text-mid)', lineHeight: 1.7 }}>
-              Si una finca sufre una plaga o problema fitosanitario, este análisis identifica
-              qué cafeterías sirven café de <strong>fincas vecinas</strong> que comparten microclima o fuente de agua,
-              y por lo tanto podrían verse afectadas.
+              If a farm suffers a pest or phytosanitary problem, this analysis identifies
+              which coffee shops serve coffee from <strong>neighboring farms</strong> that share a microclimate or water source,
+              and could therefore be affected.
             </p>
           </div>
         </div>
@@ -80,11 +80,11 @@ export default function ImpactoView() {
           onChange={setFincaId}
           onSelect={runSearch}
           suggestions={suggestions}
-          placeholder="Buscar finca (nombre o ID)"
+          placeholder="Search farm (name or ID)"
           disabled={loading}
         />
         <button className="btn btn-fill" type="submit" disabled={loading}>
-          {loading ? '…' : 'Analizar'}
+          {loading ? '…' : 'Analyze'}
         </button>
       </form>
 
@@ -98,20 +98,20 @@ export default function ImpactoView() {
               <LottiePlayer src="https://assets9.lottiefiles.com/packages/lf20_jbrw3hcz.json" size={120} />
             </div>
             <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: 'var(--text-dark)', marginBottom: 8 }}>
-              Sin impacto detectado
+              No impact detected
             </h3>
-            <p>No se encontraron fincas vecinas con microclima compartido que tengan lotes activos en cafeterías.</p>
+            <p>No neighboring farms with a shared microclimate that have active batches in coffee shops were found.</p>
           </div>
         ) : (
           <>
             <div className="section-title">
-              {resultados.length} {resultados.length === 1 ? 'finca vecina afectada' : 'fincas vecinas afectadas'}
+              {resultados.length} {resultados.length === 1 ? 'neighboring farm affected' : 'neighboring farms affected'}
             </div>
             {resultados.map((r, i) => (
               <div key={i} className="impacto-result">
                 <div className="impacto-finca" style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Leaf size={15} color="var(--text-mid)" /> {r.finca_vecina}</div>
                 <div style={{ fontSize: 12, color: 'var(--text-mid)' }}>
-                  {r.lotes} {r.lotes === 1 ? 'lote activo' : 'lotes activos'} en cafeterías
+                  {r.lotes} {r.lotes === 1 ? 'active batch' : 'active batches'} in coffee shops
                 </div>
                 <div className="impacto-cafes">
                   {r.cafeterias_afectadas.map((c, j) => (

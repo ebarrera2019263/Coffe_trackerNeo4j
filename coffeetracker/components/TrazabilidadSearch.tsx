@@ -34,13 +34,13 @@ export default function TrazabilidadSearch() {
     try {
       const res = await fetch(`/api/trazabilidad/${encodeURIComponent(loteId)}`)
       if (res.status === 404) {
-        setError('Lote no encontrado. Verifica el código e intenta de nuevo.')
+        setError('Batch not found. Check the code and try again.')
         return
       }
-      if (!res.ok) throw new Error('Error al buscar el lote')
+      if (!res.ok) throw new Error('Error searching for the batch')
       router.push(`/trazabilidad/${encodeURIComponent(loteId)}`)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Error desconocido')
+      setError(e instanceof Error ? e.message : 'Unknown error')
     } finally {
       setLoading(false)
     }
@@ -57,11 +57,11 @@ export default function TrazabilidadSearch() {
       <div style={{ maxWidth: 520, margin: '40px auto', textAlign: 'center' }}>
         <Search size={52} color="var(--text-pale)" style={{ marginBottom: 16 }} />
         <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 500, color: 'var(--text-dark)', marginBottom: 8 }}>
-          Traza tu café
+          Trace your coffee
         </h2>
         <p style={{ fontSize: 13.5, color: 'var(--text-mid)', lineHeight: 1.7, marginBottom: 24 }}>
-          Ingresa el código de lote para ver la cadena completa:<br />
-          cafetería → tostador → transporte → beneficio → finca → productor
+          Enter the batch code to see the full chain:<br />
+          coffee shop → roaster → transport → wet mill → farm → producer
         </p>
 
         <form onSubmit={handleSearch} style={{ display: 'flex', gap: 10, marginBottom: 14 }}>
@@ -70,11 +70,11 @@ export default function TrazabilidadSearch() {
             onChange={setQuery}
             onSelect={navigate}
             suggestions={suggestions}
-            placeholder="Código de lote (ej. GT-FRA-6570)"
+            placeholder="Batch code (e.g. GT-FRA-6570)"
             disabled={loading}
           />
           <button className="btn btn-fill" type="submit" disabled={loading}>
-            {loading ? '…' : 'Buscar'}
+            {loading ? '…' : 'Search'}
           </button>
         </form>
 

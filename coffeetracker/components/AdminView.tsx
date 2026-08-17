@@ -33,7 +33,7 @@ function parseValue(v: string): unknown {
 function formatCell(val: unknown): string {
   if (val === null || val === undefined) return '—'
   if (Array.isArray(val)) return (val as unknown[]).join(', ')
-  if (typeof val === 'boolean') return val ? 'Sí' : 'No'
+  if (typeof val === 'boolean') return val ? 'Yes' : 'No'
   return String(val)
 }
 
@@ -88,7 +88,7 @@ function emptyKV(n = 5): KVPair[] {
 const LABEL_SCHEMA: Record<string, { key: string; placeholder: string }[]> = {
   Cafeteria: [
     { key: 'cafeteria_id',        placeholder: 'C999' },
-    { key: 'nombre',              placeholder: 'Café Ejemplo' },
+    { key: 'nombre',              placeholder: 'Example Café' },
     { key: 'ciudad',              placeholder: 'Antigua' },
     { key: 'tipo',                placeholder: 'Especialidad' },
     { key: 'precio_promedio_taza',placeholder: '45' },
@@ -97,7 +97,7 @@ const LABEL_SCHEMA: Record<string, { key: string; placeholder: string }[]> = {
   ],
   Finca: [
     { key: 'finca_id',             placeholder: 'F999' },
-    { key: 'nombre',               placeholder: 'Finca Ejemplo' },
+    { key: 'nombre',               placeholder: 'Example Farm' },
     { key: 'region',               placeholder: 'Huehuetenango' },
     { key: 'altitud_msnm',         placeholder: '1800' },
     { key: 'organica',             placeholder: 'true' },
@@ -118,13 +118,13 @@ const LABEL_SCHEMA: Record<string, { key: string; placeholder: string }[]> = {
   ],
   Tostador: [
     { key: 'tostador_id',     placeholder: 'T999' },
-    { key: 'nombre',          placeholder: 'Tostador Ejemplo' },
+    { key: 'nombre',          placeholder: 'Example Roaster' },
     { key: 'pais',            placeholder: 'Guatemala' },
     { key: 'perfil_preferido',placeholder: 'Medio' },
   ],
   Beneficio: [
     { key: 'beneficio_id',    placeholder: 'B999' },
-    { key: 'nombre',          placeholder: 'Beneficio Ejemplo' },
+    { key: 'nombre',          placeholder: 'Example Wet Mill' },
     { key: 'tipo',            placeholder: 'Húmedo' },
     { key: 'municipio',       placeholder: 'San Marcos' },
     { key: 'capacidad_qq_dia',placeholder: '100' },
@@ -163,7 +163,7 @@ function getSchemaPlaceholder(labels: Set<Label>, key: string): string {
     const field = (LABEL_SCHEMA[l] ?? []).find(f => f.key === key)
     if (field) return field.placeholder
   }
-  return 'valor'
+  return 'value'
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -174,9 +174,9 @@ export default function AdminView() {
   return (
     <div className="page fade-in">
       <div className="tabs" style={{ marginBottom: 20 }}>
-        <button className={`tab${mainTab === 'nodos' ? ' active' : ''}`} onClick={() => setMainTab('nodos')}>Nodos</button>
-        <button className={`tab${mainTab === 'relaciones' ? ' active' : ''}`} onClick={() => setMainTab('relaciones')}>Relaciones</button>
-        <button className={`tab${mainTab === 'csv' ? ' active' : ''}`} onClick={() => setMainTab('csv')}>Importar CSV</button>
+        <button className={`tab${mainTab === 'nodos' ? ' active' : ''}`} onClick={() => setMainTab('nodos')}>Nodes</button>
+        <button className={`tab${mainTab === 'relaciones' ? ' active' : ''}`} onClick={() => setMainTab('relaciones')}>Relationships</button>
+        <button className={`tab${mainTab === 'csv' ? ' active' : ''}`} onClick={() => setMainTab('csv')}>Import CSV</button>
       </div>
       {mainTab === 'nodos' ? <NodosPanel /> : mainTab === 'relaciones' ? <RelacionesPanel /> : <CsvPanel />}
     </div>
@@ -222,7 +222,7 @@ function NodosPanel() {
       const params = new URLSearchParams({ label: activeLabel })
       if (searchTerm) params.set('search', searchTerm)
       const res = await fetch(`/api/admin/nodos?${params}`)
-      if (!res.ok) throw new Error('Error al cargar')
+      if (!res.ok) throw new Error('Failed to load')
       setNodos(await res.json())
     } catch (e) { setError(e instanceof Error ? e.message : 'Error') }
     finally { setLoading(false) }
@@ -263,22 +263,22 @@ function NodosPanel() {
         }
       }
     })
-    if (!Object.keys(props).length) { setError('Completa al menos el campo ID para crear el nodo'); return }
+    if (!Object.keys(props).length) { setError('Fill in at least the ID field to create the node'); return }
     // El campo de ID es obligatorio: sin él, el nodo no se puede borrar/editar después
     const requiredIds = labels.map(l => getIdField(l))
     const missingId = requiredIds.find(idKey => !(idKey in props) || props[idKey] === '' || props[idKey] === null || props[idKey] === undefined)
-    if (missingId) { setError(`Falta el campo "${missingId}" — es obligatorio para identificar el nodo`); return }
+    if (missingId) { setError(`Missing field "${missingId}" — it is required to identify the node`); return }
     setCreating(true)
     try {
       const res = await fetch('/api/admin/nodos', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ labels, properties: props }),
       })
-      if (!res.ok) throw new Error((await res.json()).error || 'Error al crear')
+      if (!res.ok) throw new Error((await res.json()).error || 'Failed to create')
       setShowCreate(false)
       setCreateProps(schemaToKV(createLabels))
       await load()
-    } catch (e) { setError(e instanceof Error ? e.message : 'Error al crear') }
+    } catch (e) { setError(e instanceof Error ? e.message : 'Failed to create') }
     finally { setCreating(false) }
   }
 
@@ -297,14 +297,14 @@ function NodosPanel() {
         method: 'PUT', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ label: activeLabel, id_value: idVal, properties: props }),
       })
-      if (!res.ok) throw new Error('Error al guardar')
+      if (!res.ok) throw new Error('Failed to save')
       setEditingId(null); await load()
-    } catch (e) { setError(e instanceof Error ? e.message : 'Error al guardar') }
+    } catch (e) { setError(e instanceof Error ? e.message : 'Failed to save') }
     finally { setSaving(false) }
   }
 
   async function handleDelete(node: NodeRecord) {
-    if (!confirm('¿Eliminar este nodo?')) return
+    if (!confirm('Delete this node?')) return
     try {
       const idValue = getNodeId(node, activeLabel)
       const eid = node._eid as string | undefined
@@ -314,7 +314,7 @@ function NodosPanel() {
         method: 'DELETE', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       })
-      if (!res.ok) throw new Error('Error al eliminar')
+      if (!res.ok) throw new Error('Failed to delete')
       await load()
     } catch (e) { setError(e instanceof Error ? e.message : 'Error') }
   }
@@ -327,14 +327,14 @@ function NodosPanel() {
         method: 'PATCH', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ label: activeLabel, id_values: ids, properties: { [bulkKey.trim()]: remove ? null : parseValue(bulkVal) } }),
       })
-      if (!res.ok) throw new Error('Error bulk')
+      if (!res.ok) throw new Error('Bulk update error')
       setBulkKey(''); setBulkVal(''); await load()
-    } catch (e) { setError(e instanceof Error ? e.message : 'Error bulk') }
+    } catch (e) { setError(e instanceof Error ? e.message : 'Bulk update error') }
   }
 
   async function handleBulkDelete() {
     const ids = Array.from(selected).filter(Boolean)
-    if (!ids.length || !confirm(`¿Eliminar ${ids.length} nodo(s)?`)) return
+    if (!ids.length || !confirm(`Delete ${ids.length} node(s)?`)) return
     setBulkDeleting(true)
     try {
       // Si un id seleccionado coincide con un _eid (formato Neo4j "4:uuid:n"), borramos por elementId; si no, por campo de negocio
@@ -348,7 +348,7 @@ function NodosPanel() {
         method: 'DELETE', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       })
-      if (!res.ok) throw new Error('Error bulk delete')
+      if (!res.ok) throw new Error('Bulk delete error')
       await load()
     } catch (e) { setError(e instanceof Error ? e.message : 'Error') }
     finally { setBulkDeleting(false) }
@@ -403,14 +403,14 @@ function NodosPanel() {
           value={search}
           onChange={setSearch}
           suggestions={searchSuggestions}
-          placeholder={`Buscar en ${activeLabel}s — nombre, id, ciudad…`}
+          placeholder={`Search ${activeLabel}s — name, id, city…`}
           className="trace-input"
         />
         <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={toggleAll}>
-          {selected.size === nodos.length && nodos.length > 0 ? 'Deseleccionar todo' : 'Seleccionar todo'}
+          {selected.size === nodos.length && nodos.length > 0 ? 'Deselect all' : 'Select all'}
         </button>
         <button className="btn btn-fill" style={{ fontSize: 11 }} onClick={() => setShowCreate(v => !v)}>
-          {showCreate ? <><X size={13} /> Cancelar</> : <><Plus size={13} /> Crear Nodo</>}
+          {showCreate ? <><X size={13} /> Cancel</> : <><Plus size={13} /> Create Node</>}
         </button>
         <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={() => load()}>↻</button>
       </div>
@@ -425,11 +425,11 @@ function NodosPanel() {
       {/* Create form */}
       {showCreate && (
         <div className="card" style={{ marginBottom: 16, padding: 16 }}>
-          <div className="section-title" style={{ marginBottom: 10 }}>Crear Nodo</div>
+          <div className="section-title" style={{ marginBottom: 10 }}>Create Node</div>
 
           <div style={{ marginBottom: 12 }}>
             <div style={{ fontSize: 12, color: 'var(--text-light)', marginBottom: 4 }}>
-              Labels — normalmente solo 1. Activa más para crear un nodo con múltiples tipos a la vez (ej. Finca + Productor cuando el dueño es el mismo):
+              Labels — usually just 1. Enable more to create a node with multiple types at once (e.g. Finca + Productor when the owner is the same):
             </div>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 6 }}>
               {LABELS.map(l => {
@@ -451,18 +451,18 @@ function NodosPanel() {
               })}
             </div>
             {createLabels.size >= 2 && (
-              <div style={{ fontSize: 11, color: 'var(--caramel)', display: 'flex', alignItems: 'center', gap: 4 }}><Check size={12} /> Se creará 1 nodo con los labels: {Array.from(createLabels).join(' + ')}</div>
+              <div style={{ fontSize: 11, color: 'var(--caramel)', display: 'flex', alignItems: 'center', gap: 4 }}><Check size={12} /> 1 node will be created with labels: {Array.from(createLabels).join(' + ')}</div>
             )}
           </div>
 
           <div style={{ marginBottom: 12 }}>
             <div style={{ fontSize: 12, color: 'var(--text-light)', marginBottom: 6 }}>
-              Propiedades — rellena el valor de cada campo. Los números y true/false se detectan automáticamente:
+              Properties — fill in the value for each field. Numbers and true/false are detected automatically:
             </div>
             {createProps.map((p, i) => (
               <div key={i} style={{ display: 'flex', gap: 6, marginBottom: 6, alignItems: 'center' }}>
                 <div style={{ flex: 1, fontSize: 12, color: 'var(--text-dark)', fontWeight: 500, padding: '0 4px', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {p.key || <span style={{ color: 'var(--text-light)' }}>campo</span>}
+                  {p.key || <span style={{ color: 'var(--text-light)' }}>field</span>}
                 </div>
                 <input className="trace-input" style={{ flex: 2 }}
                   placeholder={getSchemaPlaceholder(createLabels, p.key)}
@@ -473,11 +473,11 @@ function NodosPanel() {
               </div>
             ))}
             <button className="btn btn-outline" style={{ fontSize: 11 }}
-              onClick={() => setCreateProps(pr => [...pr, { key: '', val: '' }])}>+ Campo extra</button>
+              onClick={() => setCreateProps(pr => [...pr, { key: '', val: '' }])}>+ Extra field</button>
           </div>
 
           <button className="btn btn-fill" onClick={handleCreate} disabled={creating}>
-            {creating ? 'Creando…' : `Crear (${createLabels.size} label${createLabels.size > 1 ? 's' : ''})`}
+            {creating ? 'Creating…' : `Create (${createLabels.size} label${createLabels.size > 1 ? 's' : ''})`}
           </button>
         </div>
       )}
@@ -486,25 +486,25 @@ function NodosPanel() {
       {selected.size > 0 && (
         <div className="card" style={{ marginBottom: 12, padding: 12, background: '#fff8f0', border: '1px solid var(--caramel)' }}>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--caramel)' }}>{selected.size} seleccionado(s)</span>
-            <input className="trace-input" style={{ width: 120 }} placeholder="propiedad" value={bulkKey} onChange={e => setBulkKey(e.target.value)} />
-            <input className="trace-input" style={{ width: 140 }} placeholder="nuevo valor" value={bulkVal} onChange={e => setBulkVal(e.target.value)} />
-            <button className="btn btn-fill" style={{ fontSize: 11 }} onClick={() => handleBulkUpdate(false)}>Actualizar prop</button>
-            <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={() => handleBulkUpdate(true)}>Eliminar prop</button>
+            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--caramel)' }}>{selected.size} selected</span>
+            <input className="trace-input" style={{ width: 120 }} placeholder="property" value={bulkKey} onChange={e => setBulkKey(e.target.value)} />
+            <input className="trace-input" style={{ width: 140 }} placeholder="new value" value={bulkVal} onChange={e => setBulkVal(e.target.value)} />
+            <button className="btn btn-fill" style={{ fontSize: 11 }} onClick={() => handleBulkUpdate(false)}>Update prop</button>
+            <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={() => handleBulkUpdate(true)}>Remove prop</button>
             <button className="btn btn-outline" style={{ fontSize: 11, color: '#c00', borderColor: '#ffcccc' }}
-              onClick={handleBulkDelete} disabled={bulkDeleting}>{bulkDeleting ? '…' : 'Eliminar selección'}</button>
-            <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={() => setSelected(new Set())}>Cancelar</button>
+              onClick={handleBulkDelete} disabled={bulkDeleting}>{bulkDeleting ? '…' : 'Delete selection'}</button>
+            <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={() => setSelected(new Set())}>Cancel</button>
           </div>
         </div>
       )}
 
       {/* Table */}
       {loading ? (
-        <div className="loading-state">Cargando {activeLabel}s…</div>
+        <div className="loading-state">Loading {activeLabel}s…</div>
       ) : nodos.length === 0 ? (
-        <div className="empty-state"><p>No hay {activeLabel}s.</p></div>
+        <div className="empty-state"><p>No {activeLabel}s found.</p></div>
       ) : visibles.length === 0 ? (
-        <div className="empty-state"><p>Ningún {activeLabel} coincide con «{search}».</p></div>
+        <div className="empty-state"><p>No {activeLabel} matches &ldquo;{search}&rdquo;.</p></div>
       ) : (
         <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
           <div style={{ overflowX: 'auto' }}>
@@ -513,7 +513,7 @@ function NodosPanel() {
                 <tr>
                   <th style={{ width: 32 }}><input type="checkbox" checked={selected.size === visibles.length && visibles.length > 0} onChange={toggleAll} /></th>
                   {columns.map(c => <th key={c}>{c}</th>)}
-                  <th style={{ width: 120 }}>Acciones</th>
+                  <th style={{ width: 120 }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -534,10 +534,10 @@ function NodosPanel() {
                         <td>
                           <div style={{ display: 'flex', gap: 4 }}>
                             <button className="btn btn-outline" style={{ fontSize: 11, padding: '3px 8px' }} onClick={() => startEdit(node)}>
-                              {isEdit ? 'Cerrar' : 'Editar'}
+                              {isEdit ? 'Close' : 'Edit'}
                             </button>
                             <button className="btn btn-outline" style={{ fontSize: 11, padding: '3px 8px', color: '#c00', borderColor: '#ffcccc' }}
-                              onClick={() => handleDelete(node)}>Eliminar</button>
+                              onClick={() => handleDelete(node)}>Delete</button>
                           </div>
                         </td>
                       </tr>
@@ -545,7 +545,7 @@ function NodosPanel() {
                         <tr>
                           <td colSpan={columns.length + 2} style={{ background: '#faf5ef', padding: 16 }}>
                             <div style={{ fontSize: 12, color: 'var(--text-light)', marginBottom: 8 }}>
-                              Editar propiedades — valor vacío o × elimina la propiedad:
+                              Edit properties — an empty value or × removes the property:
                             </div>
                             {editProps.map((p, pi) => (
                               <div key={pi} style={{ display: 'flex', gap: 6, marginBottom: 6, alignItems: 'center' }}>
@@ -562,11 +562,11 @@ function NodosPanel() {
                             ))}
                             <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
                               <button className="btn btn-outline" style={{ fontSize: 11 }}
-                                onClick={() => setEditProps(pr => [...pr, { key: '', val: '' }])}>+ Propiedad</button>
+                                onClick={() => setEditProps(pr => [...pr, { key: '', val: '' }])}>+ Property</button>
                               <button className="btn btn-fill" style={{ fontSize: 11 }} onClick={() => handleSave(idVal)} disabled={saving}>
-                                {saving ? 'Guardando…' : 'Guardar cambios'}
+                                {saving ? 'Saving…' : 'Save changes'}
                               </button>
-                              <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={() => setEditingId(null)}>Cancelar</button>
+                              <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={() => setEditingId(null)}>Cancel</button>
                             </div>
                           </td>
                         </tr>
@@ -623,7 +623,7 @@ function RelacionesPanel() {
       const params = new URLSearchParams({ type: activeType })
       if (searchTerm) params.set('search', searchTerm)
       const res = await fetch(`/api/admin/relaciones?${params}`)
-      if (!res.ok) throw new Error('Error al cargar')
+      if (!res.ok) throw new Error('Failed to load')
       setRels(await res.json())
     } catch (e) { setError(e instanceof Error ? e.message : 'Error') }
     finally { setLoading(false) }
@@ -647,7 +647,7 @@ function RelacionesPanel() {
   }, [search])
 
   async function handleCreate() {
-    if (!fromVal.trim() || !toVal.trim()) { setError('Completa los IDs de ambos nodos'); return }
+    if (!fromVal.trim() || !toVal.trim()) { setError('Fill in the IDs of both nodes'); return }
     const props: Record<string, unknown> = {}
     cProps.forEach(({ key, val }) => { if (key.trim()) props[key.trim()] = parseValue(val) })
     setCreating(true)
@@ -656,11 +656,11 @@ function RelacionesPanel() {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: cType, from_label: fromLabel, from_id_value: fromVal.trim(), to_label: toLabel, to_id_value: toVal.trim(), properties: props }),
       })
-      if (!res.ok) throw new Error((await res.json()).error || 'Error al crear')
+      if (!res.ok) throw new Error((await res.json()).error || 'Failed to create')
       setShowCreate(false); setFromVal(''); setToVal(''); setCProps(emptyKV(3))
       // Si se creó con un tipo distinto al activo, cambiar el filtro para que el usuario vea su relación nueva
       if (cType !== activeType) setActiveType(cType); else await load()
-    } catch (e) { setError(e instanceof Error ? e.message : 'Error al crear') }
+    } catch (e) { setError(e instanceof Error ? e.message : 'Failed to create') }
     finally { setCreating(false) }
   }
 
@@ -679,14 +679,14 @@ function RelacionesPanel() {
         method: 'PUT', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ element_id: eid, properties: props }),
       })
-      if (!res.ok) throw new Error('Error al guardar')
+      if (!res.ok) throw new Error('Failed to save')
       setEditingEid(null); await load()
     } catch (e) { setError(e instanceof Error ? e.message : 'Error') }
     finally { setSaving(false) }
   }
 
   async function handleDeleteRel(eid: string) {
-    if (!confirm('¿Eliminar esta relación?')) return
+    if (!confirm('Delete this relationship?')) return
     try {
       const res = await fetch('/api/admin/relaciones', {
         method: 'DELETE', headers: { 'Content-Type': 'application/json' },
@@ -704,14 +704,14 @@ function RelacionesPanel() {
         method: 'PATCH', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ element_ids: eids, properties: { [bulkKey.trim()]: remove ? null : parseValue(bulkVal) } }),
       })
-      if (!res.ok) throw new Error('Error bulk')
+      if (!res.ok) throw new Error('Bulk update error')
       setBulkKey(''); setBulkVal(''); await load()
     } catch (e) { setError(e instanceof Error ? e.message : 'Error') }
   }
 
   async function handleBulkDeleteRel() {
     const eids = Array.from(relSel)
-    if (!confirm(`¿Eliminar ${eids.length} relación(es)?`)) return
+    if (!confirm(`Delete ${eids.length} relationship(s)?`)) return
     try {
       const res = await fetch('/api/admin/relaciones', {
         method: 'DELETE', headers: { 'Content-Type': 'application/json' },
@@ -756,27 +756,27 @@ function RelacionesPanel() {
     <div>
       {/* Header */}
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 14, flexWrap: 'wrap' }}>
-        <span style={{ fontSize: 12, color: 'var(--text-light)' }}>Tipo:</span>
+        <span style={{ fontSize: 12, color: 'var(--text-light)' }}>Type:</span>
         <select className="filter-select" value={activeType} onChange={e => setActiveType(e.target.value)}>
           {REL_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
         </select>
         {!loading && (
           <span style={{ fontSize: 12, color: 'var(--text-light)' }}>
-            {q ? `${visibles.length}/${rels.length}` : rels.length} relaciones
+            {q ? `${visibles.length}/${rels.length}` : rels.length} relationships
           </span>
         )}
         <Combobox
           value={search}
           onChange={setSearch}
           suggestions={relSuggestions}
-          placeholder="Buscar por origen, destino o propiedad…"
+          placeholder="Search by source, target, or property…"
           className="trace-input"
         />
         <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={toggleAllRel}>
-          {relSel.size === visibles.length && visibles.length > 0 ? 'Deseleccionar' : 'Sel. todo'}
+          {relSel.size === visibles.length && visibles.length > 0 ? 'Deselect' : 'Select all'}
         </button>
         <button className="btn btn-fill" style={{ fontSize: 11 }} onClick={() => setShowCreate(v => !v)}>
-          {showCreate ? <><X size={13} /> Cancelar</> : <><Plus size={13} /> Crear Relación</>}
+          {showCreate ? <><X size={13} /> Cancel</> : <><Plus size={13} /> Create Relationship</>}
         </button>
         <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={() => load()}>↻</button>
       </div>
@@ -791,50 +791,50 @@ function RelacionesPanel() {
       {/* Create form */}
       {showCreate && (
         <div className="card" style={{ marginBottom: 16, padding: 16 }}>
-          <div className="section-title" style={{ marginBottom: 12 }}>Crear Relación</div>
+          <div className="section-title" style={{ marginBottom: 12 }}>Create Relationship</div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: 12, marginBottom: 12, alignItems: 'end' }}>
             <div>
-              <div style={{ fontSize: 12, color: 'var(--text-light)', marginBottom: 4 }}>Nodo origen:</div>
+              <div style={{ fontSize: 12, color: 'var(--text-light)', marginBottom: 4 }}>Source node:</div>
               <select className="filter-select" style={{ width: '100%', marginBottom: 6 }} value={fromLabel}
                 onChange={e => setFromLabel(e.target.value as Label)}>
                 {LABELS.map(l => <option key={l} value={l}>{l}</option>)}
               </select>
-              <input className="trace-input" placeholder={`${getIdField(fromLabel)} del nodo`} value={fromVal}
+              <input className="trace-input" placeholder={`node ${getIdField(fromLabel)}`} value={fromVal}
                 onChange={e => setFromVal(e.target.value)} />
             </div>
             <div style={{ textAlign: 'center', paddingBottom: 8 }}>
-              <div style={{ fontSize: 11, color: 'var(--text-light)', marginBottom: 4 }}>Tipo</div>
+              <div style={{ fontSize: 11, color: 'var(--text-light)', marginBottom: 4 }}>Type</div>
               <select className="filter-select" value={cType} onChange={e => setCType(e.target.value)}>
                 {REL_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
               </select>
               <div style={{ fontSize: 20, color: 'var(--caramel)', marginTop: 4 }}>→</div>
             </div>
             <div>
-              <div style={{ fontSize: 12, color: 'var(--text-light)', marginBottom: 4 }}>Nodo destino:</div>
+              <div style={{ fontSize: 12, color: 'var(--text-light)', marginBottom: 4 }}>Target node:</div>
               <select className="filter-select" style={{ width: '100%', marginBottom: 6 }} value={toLabel}
                 onChange={e => setToLabel(e.target.value as Label)}>
                 {LABELS.map(l => <option key={l} value={l}>{l}</option>)}
               </select>
-              <input className="trace-input" placeholder={`${getIdField(toLabel)} del nodo`} value={toVal}
+              <input className="trace-input" placeholder={`node ${getIdField(toLabel)}`} value={toVal}
                 onChange={e => setToVal(e.target.value)} />
             </div>
           </div>
           <div style={{ marginBottom: 12 }}>
-            <div style={{ fontSize: 12, color: 'var(--text-light)', marginBottom: 6 }}>Propiedades (mín. 3):</div>
+            <div style={{ fontSize: 12, color: 'var(--text-light)', marginBottom: 6 }}>Properties (min. 3):</div>
             {cProps.map((p, i) => (
               <div key={i} style={{ display: 'flex', gap: 6, marginBottom: 6 }}>
-                <input className="trace-input" style={{ flex: 1 }} placeholder="clave" value={p.key}
+                <input className="trace-input" style={{ flex: 1 }} placeholder="key" value={p.key}
                   onChange={e => setCProps(pr => pr.map((x, j) => j === i ? { ...x, key: e.target.value } : x))} />
-                <input className="trace-input" style={{ flex: 2 }} placeholder="valor" value={p.val}
+                <input className="trace-input" style={{ flex: 2 }} placeholder="value" value={p.val}
                   onChange={e => setCProps(pr => pr.map((x, j) => j === i ? { ...x, val: e.target.value } : x))} />
                 <button className="btn btn-outline" style={{ fontSize: 11, padding: '4px 8px' }}
                   onClick={() => setCProps(pr => pr.filter((_, j) => j !== i))}><X size={13} /></button>
               </div>
             ))}
             <button className="btn btn-outline" style={{ fontSize: 11 }}
-              onClick={() => setCProps(pr => [...pr, { key: '', val: '' }])}>+ Campo</button>
+              onClick={() => setCProps(pr => [...pr, { key: '', val: '' }])}>+ Field</button>
           </div>
-          <button className="btn btn-fill" onClick={handleCreate} disabled={creating}>{creating ? 'Creando…' : 'Crear relación'}</button>
+          <button className="btn btn-fill" onClick={handleCreate} disabled={creating}>{creating ? 'Creating…' : 'Create relationship'}</button>
         </div>
       )}
 
@@ -842,24 +842,24 @@ function RelacionesPanel() {
       {relSel.size > 0 && (
         <div className="card" style={{ marginBottom: 12, padding: 12, background: '#fff8f0', border: '1px solid var(--caramel)' }}>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--caramel)' }}>{relSel.size} seleccionada(s)</span>
-            <input className="trace-input" style={{ width: 120 }} placeholder="propiedad" value={bulkKey} onChange={e => setBulkKey(e.target.value)} />
-            <input className="trace-input" style={{ width: 140 }} placeholder="nuevo valor" value={bulkVal} onChange={e => setBulkVal(e.target.value)} />
-            <button className="btn btn-fill" style={{ fontSize: 11 }} onClick={() => handleBulkUpdate(false)}>Actualizar prop</button>
-            <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={() => handleBulkUpdate(true)}>Eliminar prop</button>
-            <button className="btn btn-outline" style={{ fontSize: 11, color: '#c00', borderColor: '#ffcccc' }} onClick={handleBulkDeleteRel}>Eliminar selección</button>
-            <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={() => setRelSel(new Set())}>Cancelar</button>
+            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--caramel)' }}>{relSel.size} selected</span>
+            <input className="trace-input" style={{ width: 120 }} placeholder="property" value={bulkKey} onChange={e => setBulkKey(e.target.value)} />
+            <input className="trace-input" style={{ width: 140 }} placeholder="new value" value={bulkVal} onChange={e => setBulkVal(e.target.value)} />
+            <button className="btn btn-fill" style={{ fontSize: 11 }} onClick={() => handleBulkUpdate(false)}>Update prop</button>
+            <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={() => handleBulkUpdate(true)}>Remove prop</button>
+            <button className="btn btn-outline" style={{ fontSize: 11, color: '#c00', borderColor: '#ffcccc' }} onClick={handleBulkDeleteRel}>Delete selection</button>
+            <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={() => setRelSel(new Set())}>Cancel</button>
           </div>
         </div>
       )}
 
       {/* Table */}
       {loading ? (
-        <div className="loading-state">Cargando relaciones…</div>
+        <div className="loading-state">Loading relationships…</div>
       ) : rels.length === 0 ? (
-        <div className="empty-state"><p>No hay relaciones de tipo {activeType}.</p></div>
+        <div className="empty-state"><p>No relationships of type {activeType}.</p></div>
       ) : visibles.length === 0 ? (
-        <div className="empty-state"><p>Ninguna relación coincide con «{search}».</p></div>
+        <div className="empty-state"><p>No relationship matches &ldquo;{search}&rdquo;.</p></div>
       ) : (
         <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
           <div style={{ overflowX: 'auto' }}>
@@ -867,11 +867,11 @@ function RelacionesPanel() {
               <thead>
                 <tr>
                   <th style={{ width: 32 }}><input type="checkbox" checked={relSel.size === visibles.length && visibles.length > 0} onChange={toggleAllRel} /></th>
-                  <th>Origen</th>
-                  <th>→ Tipo →</th>
-                  <th>Destino</th>
-                  <th>Propiedades</th>
-                  <th style={{ width: 120 }}>Acciones</th>
+                  <th>Source</th>
+                  <th>→ Type →</th>
+                  <th>Target</th>
+                  <th>Properties</th>
+                  <th style={{ width: 120 }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -899,10 +899,10 @@ function RelacionesPanel() {
                         <td>
                           <div style={{ display: 'flex', gap: 4 }}>
                             <button className="btn btn-outline" style={{ fontSize: 11, padding: '3px 8px' }} onClick={() => startEdit(rel)}>
-                              {isEdit ? 'Cerrar' : 'Editar'}
+                              {isEdit ? 'Close' : 'Edit'}
                             </button>
                             <button className="btn btn-outline" style={{ fontSize: 11, padding: '3px 8px', color: '#c00', borderColor: '#ffcccc' }}
-                              onClick={() => handleDeleteRel(rel.eid)}>Eliminar</button>
+                              onClick={() => handleDeleteRel(rel.eid)}>Delete</button>
                           </div>
                         </td>
                       </tr>
@@ -910,7 +910,7 @@ function RelacionesPanel() {
                         <tr>
                           <td colSpan={6} style={{ background: '#faf5ef', padding: 16 }}>
                             <div style={{ fontSize: 12, color: 'var(--text-light)', marginBottom: 8 }}>
-                              Editar propiedades — × marca para eliminar:
+                              Edit properties — × marks for removal:
                             </div>
                             {editProps.map((p, pi) => (
                               <div key={pi} style={{ display: 'flex', gap: 6, marginBottom: 6, alignItems: 'center' }}>
@@ -927,11 +927,11 @@ function RelacionesPanel() {
                             ))}
                             <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
                               <button className="btn btn-outline" style={{ fontSize: 11 }}
-                                onClick={() => setEditProps(pr => [...pr, { key: '', val: '' }])}>+ Propiedad</button>
+                                onClick={() => setEditProps(pr => [...pr, { key: '', val: '' }])}>+ Property</button>
                               <button className="btn btn-fill" style={{ fontSize: 11 }} onClick={() => handleSaveRel(rel.eid)} disabled={saving}>
-                                {saving ? 'Guardando…' : 'Guardar'}
+                                {saving ? 'Saving…' : 'Save'}
                               </button>
-                              <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={() => setEditingEid(null)}>Cancelar</button>
+                              <button className="btn btn-outline" style={{ fontSize: 11 }} onClick={() => setEditingEid(null)}>Cancel</button>
                             </div>
                           </td>
                         </tr>
@@ -994,10 +994,10 @@ function CsvPanel() {
       form.append('file', file)
       const res = await fetch('/api/admin/csv', { method: 'POST', body: form })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Error al importar')
+      if (!res.ok) throw new Error(data.error || 'Import failed')
       setResult(data as ImportResult)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Error desconocido')
+      setError(e instanceof Error ? e.message : 'Unknown error')
     } finally {
       setImporting(false)
     }
@@ -1019,7 +1019,7 @@ function CsvPanel() {
       })
       setUrlResult(await res.json())
     } catch (e) {
-      setUrlResult({ error: e instanceof Error ? e.message : 'Error desconocido' })
+      setUrlResult({ error: e instanceof Error ? e.message : 'Unknown error' })
     } finally {
       setLoadingUrl(false)
     }
@@ -1032,12 +1032,12 @@ function CsvPanel() {
     <div>
       {/* Formato */}
       <div className="card" style={{ marginBottom: 20, padding: 20 }}>
-        <div className="section-title" style={{ marginBottom: 10 }}>Formato del CSV</div>
+        <div className="section-title" style={{ marginBottom: 10 }}>CSV Format</div>
         <p style={{ fontSize: 12.5, color: 'var(--text-mid)', lineHeight: 1.8, marginBottom: 12 }}>
-          8 columnas fijas. Filas <code style={{ background: 'var(--cream-mid)', padding: '1px 5px', borderRadius: 4 }}>node</code> crean nodos,
-          filas <code style={{ background: 'var(--cream-mid)', padding: '1px 5px', borderRadius: 4 }}>rel</code> crean relaciones —
-          pueden conectar nodos del mismo CSV o nodos ya existentes en la DB.
-          En <strong>extra_props</strong>: <code>clave=valor</code> separado por <code>|</code>. Arrays: usá <code>;</code> entre valores.
+          8 fixed columns. <code style={{ background: 'var(--cream-mid)', padding: '1px 5px', borderRadius: 4 }}>node</code> rows create nodes,
+          and <code style={{ background: 'var(--cream-mid)', padding: '1px 5px', borderRadius: 4 }}>rel</code> rows create relationships —
+          they can connect nodes from the same CSV or nodes already in the DB.
+          In <strong>extra_props</strong>: <code>key=value</code> separated by <code>|</code>. Arrays: use <code>;</code> between values.
         </p>
         <div style={{ background: 'var(--cream)', border: '1px solid var(--border)', borderRadius: 8, padding: '10px 14px', fontFamily: 'monospace', fontSize: 11.5, color: 'var(--text-body)', overflowX: 'auto', whiteSpace: 'pre', lineHeight: 1.7 }}>
 {`type,label,rel_type,from_label,from_id,to_label,to_id,extra_props
@@ -1049,33 +1049,33 @@ rel,,PRODUJO,Finca,F0001,Lote,L99901,,`}
         <div style={{ marginTop: 12, display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <a href="/sample-import.csv" download="sample-import.csv"
             style={{ fontSize: 12.5, color: 'var(--caramel)', fontWeight: 500, textDecoration: 'none' }}>
-            ↓ CSV multiuso (upload directo)
+            ↓ Multi-purpose CSV (direct upload)
           </a>
           <a href="/github-import.csv" download="github-import.csv"
             style={{ fontSize: 12.5, color: 'var(--caramel)', fontWeight: 500, textDecoration: 'none' }}>
-            ↓ CSV para LOAD CSV (subir a GitHub)
+            ↓ CSV for LOAD CSV (upload to GitHub)
           </a>
         </div>
       </div>
 
       {/* LOAD CSV desde URL — método nativo Neo4j */}
       <div className="card" style={{ marginBottom: 20, padding: 20, borderLeft: '3px solid var(--caramel)' }}>
-        <div className="section-title" style={{ marginBottom: 6 }}>LOAD CSV desde URL <span style={{ fontSize: 11, fontWeight: 400, color: 'var(--text-light)', marginLeft: 6 }}>método nativo Neo4j</span></div>
+        <div className="section-title" style={{ marginBottom: 6 }}>LOAD CSV from URL <span style={{ fontSize: 11, fontWeight: 400, color: 'var(--text-light)', marginLeft: 6 }}>native Neo4j method</span></div>
         <p style={{ fontSize: 12, color: 'var(--text-mid)', marginBottom: 12, lineHeight: 1.7 }}>
-          Pegá la URL raw de GitHub (u otro host público). Neo4j AuraDB descarga y procesa el CSV directamente con <code style={{ background: 'var(--cream-mid)', padding: '1px 5px', borderRadius: 4 }}>LOAD CSV</code>.
-          Usá el archivo <strong>github-import.csv</strong> — tiene columnas estándar para Lotes + relaciones automáticas.
+          Paste the raw GitHub URL (or another public host). Neo4j AuraDB downloads and processes the CSV directly with <code style={{ background: 'var(--cream-mid)', padding: '1px 5px', borderRadius: 4 }}>LOAD CSV</code>.
+          Use the <strong>github-import.csv</strong> file — it has standard columns for Batches + automatic relationships.
         </p>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
           <input
             className="trace-input"
             style={{ flex: 1, minWidth: 260 }}
-            placeholder="https://raw.githubusercontent.com/usuario/repo/main/github-import.csv"
+            placeholder="https://raw.githubusercontent.com/user/repo/main/github-import.csv"
             value={csvUrl}
             onChange={e => { setCsvUrl(e.target.value); setUrlResult(null) }}
             disabled={loadingUrl}
           />
           <button className="btn btn-fill" onClick={handleLoadCsvUrl} disabled={loadingUrl || !csvUrl.trim()}>
-            {loadingUrl ? 'Cargando…' : 'Ejecutar LOAD CSV'}
+            {loadingUrl ? 'Loading…' : 'Run LOAD CSV'}
           </button>
         </div>
         {urlResult && (
@@ -1090,20 +1090,20 @@ rel,,PRODUJO,Finca,F0001,Lote,L99901,,`}
 
       {/* Upload */}
       <div className="card" style={{ marginBottom: 20, padding: 20 }}>
-        <div className="section-title" style={{ marginBottom: 12 }}>Seleccionar archivo</div>
+        <div className="section-title" style={{ marginBottom: 12 }}>Select File</div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
           <input ref={inputRef} type="file" accept=".csv,text/csv" style={{ display: 'none' }}
             onChange={e => handleFile(e.target.files?.[0] ?? null)} />
           <button className="btn btn-outline" onClick={() => inputRef.current?.click()}>
-            {file ? `📄 ${file.name}` : 'Elegir archivo CSV'}
+            {file ? `📄 ${file.name}` : 'Choose CSV file'}
           </button>
           {file && (
             <button className="btn btn-fill" onClick={handleImport} disabled={importing}>
-              {importing ? 'Importando…' : `Importar (${preview.length} filas)`}
+              {importing ? 'Importing…' : `Import (${preview.length} rows)`}
             </button>
           )}
           {file && (
-            <button className="btn btn-outline" onClick={reset}><X size={13} /> Limpiar</button>
+            <button className="btn btn-outline" onClick={reset}><X size={13} /> Clear</button>
           )}
         </div>
       </div>
@@ -1117,14 +1117,14 @@ rel,,PRODUJO,Finca,F0001,Lote,L99901,,`}
       {/* Resultado */}
       {result && (
         <div className="card" style={{ marginBottom: 20, padding: 20, background: result.errors.length === 0 ? '#f0faf4' : '#fffbf0', border: `1px solid ${result.errors.length === 0 ? '#8ec9a4' : 'var(--caramel)'}` }}>
-          <div className="section-title" style={{ marginBottom: 10 }}>Resultado</div>
+          <div className="section-title" style={{ marginBottom: 10 }}>Result</div>
           <div style={{ display: 'flex', gap: 24, marginBottom: result.errors.length > 0 ? 12 : 0, flexWrap: 'wrap' }}>
-            <div style={{ fontSize: 13 }}>✅ <strong>{result.nodes_created}</strong> nodo{result.nodes_created !== 1 ? 's' : ''} creado{result.nodes_created !== 1 ? 's' : ''}</div>
-            <div style={{ fontSize: 13 }}>🔗 <strong>{result.rels_created}</strong> relación{result.rels_created !== 1 ? 'es' : ''} creada{result.rels_created !== 1 ? 's' : ''}</div>
+            <div style={{ fontSize: 13 }}>✅ <strong>{result.nodes_created}</strong> node{result.nodes_created !== 1 ? 's' : ''} created</div>
+            <div style={{ fontSize: 13 }}>🔗 <strong>{result.rels_created}</strong> relationship{result.rels_created !== 1 ? 's' : ''} created</div>
           </div>
           {result.errors.length > 0 && (
             <div>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--caramel)', marginBottom: 6 }}>{result.errors.length} error(es):</div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--caramel)', marginBottom: 6 }}>{result.errors.length} error(s):</div>
               <ul style={{ fontSize: 12, color: 'var(--text-body)', lineHeight: 1.8, paddingLeft: 18 }}>
                 {result.errors.map((e, i) => <li key={i}>{e}</li>)}
               </ul>
@@ -1137,14 +1137,14 @@ rel,,PRODUJO,Finca,F0001,Lote,L99901,,`}
       {preview.length > 0 && !result && (
         <div>
           <div className="section-title" style={{ marginBottom: 10 }}>
-            Vista previa — {nodeRows.length} nodo{nodeRows.length !== 1 ? 's' : ''} · {relRows.length} relación{relRows.length !== 1 ? 'es' : ''}
+            Preview — {nodeRows.length} node{nodeRows.length !== 1 ? 's' : ''} · {relRows.length} relationship{relRows.length !== 1 ? 's' : ''}
           </div>
           <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
             <div style={{ overflowX: 'auto' }}>
               <table className="admin-table">
                 <thead>
                   <tr>
-                    <th>Tipo</th><th>Label / Rel</th><th>Origen</th><th>Destino</th><th>Propiedades</th>
+                    <th>Type</th><th>Label / Rel</th><th>Source</th><th>Target</th><th>Properties</th>
                   </tr>
                 </thead>
                 <tbody>

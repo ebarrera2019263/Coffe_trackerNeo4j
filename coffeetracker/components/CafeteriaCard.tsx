@@ -35,9 +35,9 @@ export default function CafeteriaCard({ cafeteria, onClick, staggerIndex = 0 }: 
       </div>
 
       <div className="cafe-card-footer">
-        <span style={{ fontSize: 12, color: 'var(--text-mid)' }}>Métodos disponibles</span>
+        <span style={{ fontSize: 12, color: 'var(--text-mid)' }}>Available methods</span>
         {cafeteria.precio_promedio_taza ? (
-          <span className="precio-badge">Q{cafeteria.precio_promedio_taza}/taza</span>
+          <span className="precio-badge">Q{cafeteria.precio_promedio_taza}/cup</span>
         ) : null}
       </div>
     </div>

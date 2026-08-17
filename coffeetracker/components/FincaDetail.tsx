@@ -25,11 +25,11 @@ export default function FincaDetail({ fincaId }: Props) {
       setError(null)
       try {
         const res = await fetch(`/api/finca/${encodeURIComponent(fincaId)}`)
-        if (res.status === 404) throw new Error('Finca no encontrada')
-        if (!res.ok) throw new Error('Error al cargar finca')
+        if (res.status === 404) throw new Error('Farm not found')
+        if (!res.ok) throw new Error('Error loading farm')
         setRows(await res.json())
       } catch (e) {
-        setError(e instanceof Error ? e.message : 'Error desconocido')
+        setError(e instanceof Error ? e.message : 'Unknown error')
       } finally {
         setLoading(false)
       }
@@ -37,18 +37,18 @@ export default function FincaDetail({ fincaId }: Props) {
     load()
   }, [fincaId])
 
-  if (loading) return <CoffeeLoader text="Cargando finca…" />
+  if (loading) return <CoffeeLoader text="Loading farm…" />
   if (error)   return (
     <div className="page">
       <div className="error-state" style={{ display: 'flex', alignItems: 'center', gap: 8 }}><AlertTriangle size={16} />{error}</div>
-      <Link href="/finca" className="btn btn-outline" style={{ marginTop: 12, display: 'inline-block' }}>← Volver</Link>
+      <Link href="/finca" className="btn btn-outline" style={{ marginTop: 12, display: 'inline-block' }}>← Back</Link>
     </div>
   )
   if (rows.length === 0) return (
     <div className="page empty-state">
       <div className="empty-icon" style={{ display: 'flex', justifyContent: 'center' }}><Leaf size={48} color="var(--text-pale)" /></div>
-      <p>No se encontraron lotes o cafeterías para esta finca.</p>
-      <Link href="/finca" className="btn btn-outline" style={{ marginTop: 16, display: 'inline-block' }}>← Volver</Link>
+      <p>No batches or coffee shops found for this farm.</p>
+      <Link href="/finca" className="btn btn-outline" style={{ marginTop: 16, display: 'inline-block' }}>← Back</Link>
     </div>
   )
 
@@ -59,11 +59,11 @@ export default function FincaDetail({ fincaId }: Props) {
       {/* Header card */}
       <div className="hero" style={{ marginBottom: 24 }}>
         <div style={{ flex: 1, position: 'relative', zIndex: 1 }}>
-          <div className="hero-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Leaf size={12} /> Finca</div>
+          <div className="hero-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Leaf size={12} /> Farm</div>
           <div className="hero-title">{finca.nombre}</div>
           <div className="hero-sub">
             {finca.region} · {finca.altitud_msnm} msnm
-            {finca.organica ? ' · Orgánica' : ''}
+            {finca.organica ? ' · Organic' : ''}
           </div>
           <div className="hero-notes">
             {(finca.variedades_cultivadas || []).map((v, i) => (
@@ -73,11 +73,11 @@ export default function FincaDetail({ fincaId }: Props) {
         </div>
         <div className="hero-right" style={{ position: 'relative', zIndex: 1 }}>
           <div className="hero-sca">{rows.length}</div>
-          <div className="hero-sca-label">Lotes activos</div>
+          <div className="hero-sca-label">Active batches</div>
         </div>
       </div>
 
-      <div className="section-title">Lotes producidos · cafeterías donde se sirven</div>
+      <div className="section-title">Batches produced · coffee shops where they are served</div>
 
       {rows.map((row) => (
         <div key={row.l.lote_id} className="card" style={{ marginBottom: 16 }}>
@@ -85,7 +85,7 @@ export default function FincaDetail({ fincaId }: Props) {
             <div>
               <div className="lot-card-code">{row.l.codigo_lote}</div>
               <div className="lot-card-name">{finca.nombre}</div>
-              <div className="lot-card-region">Cosecha: {row.l.fecha_cosecha}</div>
+              <div className="lot-card-region">Harvest: {row.l.fecha_cosecha}</div>
             </div>
             <div style={{ textAlign: 'right' }}>
               <div className="sca-num">{row.l.puntaje_sca}</div>
@@ -94,7 +94,7 @@ export default function FincaDetail({ fincaId }: Props) {
           </div>
 
           <div style={{ fontSize: 12, color: 'var(--text-light)', marginBottom: 8 }}>
-            Disponible en {row.cafeterias.length} {row.cafeterias.length === 1 ? 'cafetería' : 'cafeterías'}:
+            Available at {row.cafeterias.length} {row.cafeterias.length === 1 ? 'coffee shop' : 'coffee shops'}:
           </div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {row.cafeterias.map((c) => (
@@ -110,7 +110,7 @@ export default function FincaDetail({ fincaId }: Props) {
               className="btn btn-outline"
               style={{ fontSize: 12, padding: '6px 14px' }}
             >
-              Ver trazabilidad completa →
+              View full traceability →
             </Link>
           </div>
         </div>

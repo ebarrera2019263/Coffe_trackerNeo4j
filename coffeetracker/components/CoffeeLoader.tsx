@@ -5,7 +5,7 @@ interface Props {
   size?: number
 }
 
-export default function CoffeeLoader({ text = 'Cargando…', size = 52 }: Props) {
+export default function CoffeeLoader({ text = 'Loading…', size = 52 }: Props) {
   return (
     <div className="loading-state" style={{ flexDirection: 'column', gap: 12 }}>
       <svg width={size} height={size} viewBox="0 0 52 52" fill="none" aria-hidden>

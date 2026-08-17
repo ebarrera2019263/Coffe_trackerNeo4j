@@ -9,7 +9,7 @@ export default async function FincaDetailPage({ params }: Props) {
   const { finca_id } = await params
   return (
     <>
-      <Topbar title="Vista Finca" subtitle="Lotes y cafeterías que los sirven" />
+      <Topbar title="Farm View" subtitle="Batches and coffee shops that serve them" />
       <div style={{ flex: 1, overflowY: 'auto' }}>
         <FincaDetail fincaId={finca_id} />
       </div>

@@ -32,10 +32,10 @@ export default function CafeteriasView() {
         if (ciudad) params.set('ciudad', ciudad)
         if (tipo) params.set('tipo', tipo)
         const res = await fetch(`/api/cafeterias?${params}`)
-        if (!res.ok) throw new Error('Error al cargar cafeterías')
+        if (!res.ok) throw new Error('Error loading coffee shops')
         setCafeterias(await res.json())
       } catch (e) {
-        setError(e instanceof Error ? e.message : 'Error desconocido')
+        setError(e instanceof Error ? e.message : 'Unknown error')
       } finally {
         setLoading(false)
       }
@@ -48,10 +48,10 @@ export default function CafeteriasView() {
 
   const querySuggestions = useMemo(() => {
     const names = cafeterias.map(c => ({ value: c.nombre, label: c.nombre }))
-    const cities = ciudades.map(c => ({ value: c, label: `Ciudad: ${c}` }))
+    const cities = ciudades.map(c => ({ value: c, label: `City: ${c}` }))
     const methods = Array.from(
       new Set(cafeterias.flatMap(c => Array.isArray(c.metodos_disponibles) ? c.metodos_disponibles : []))
-    ).map(m => ({ value: m as string, label: `Método: ${m}` }))
+    ).map(m => ({ value: m as string, label: `Method: ${m}` }))
     return [...names, ...cities, ...methods]
   }, [cafeterias, ciudades])
 
@@ -81,7 +81,7 @@ export default function CafeteriasView() {
     return (
       <div className="page">
         <div className="error-state" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <AlertTriangle size={16} style={{ flexShrink: 0 }} /> {error} — Verifica que Neo4j AuraDB esté disponible y las credenciales sean correctas.
+          <AlertTriangle size={16} style={{ flexShrink: 0 }} /> {error} — Verify that Neo4j AuraDB is available and the credentials are correct.
         </div>
       </div>
     )
@@ -95,40 +95,40 @@ export default function CafeteriasView() {
           value={query}
           onChange={setQuery}
           suggestions={querySuggestions}
-          placeholder="Buscar por nombre, ciudad, método…"
+          placeholder="Search by name, city, method…"
         />
         <select className="filter-select" value={ciudad} onChange={(e) => setCiudad(e.target.value)}>
-          <option key="__all" value="">Todas las ciudades</option>
+          <option key="__all" value="">All cities</option>
           {ciudades.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
         <select className="filter-select" value={tipo} onChange={(e) => setTipo(e.target.value)}>
-          <option key="__all" value="">Todos los tipos</option>
+          <option key="__all" value="">All types</option>
           {tipos.map((t) => <option key={t} value={t}>{t}</option>)}
         </select>
         {(ciudad || tipo || query) && (
           <button className="btn btn-outline" onClick={() => { setCiudad(''); setTipo(''); setQuery('') }}>
-            Limpiar filtros
+            Clear filters
           </button>
         )}
       </div>
 
       {loading ? (
-        <CoffeeLoader text="Cargando cafeterías…" />
+        <CoffeeLoader text="Loading coffee shops…" />
       ) : visibles.length === 0 ? (
         <div className="empty-state">
           <div className="empty-icon" style={{ display: 'flex', justifyContent: 'center' }}>
             <CoffeeLoader text="" size={64} />
           </div>
           <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 500, color: 'var(--text-dark)', marginBottom: 8 }}>
-            No hay cafeterías
+            No coffee shops
           </h3>
-          <p>No se encontraron cafeterías con los filtros seleccionados.</p>
+          <p>No coffee shops found with the selected filters.</p>
         </div>
       ) : (
         <>
           <div className="section-title">
-            {visibles.length} {visibles.length === 1 ? 'cafetería' : 'cafeterías'}
-            {ciudad ? ` en ${ciudad}` : ''}
+            {visibles.length} {visibles.length === 1 ? 'coffee shop' : 'coffee shops'}
+            {ciudad ? ` in ${ciudad}` : ''}
             {tipo ? ` · ${tipo}` : ''}
             {query ? ` · «${query}»` : ''}
           </div>

@@ -12,12 +12,12 @@ interface Stats {
 }
 
 const CHAIN_STEPS = [
-  { icon: User,      label: 'Productor',  href: '/admin' },
-  { icon: Leaf,      label: 'Finca',      href: '/finca' },
-  { icon: Settings2, label: 'Beneficio',  href: '/admin' },
-  { icon: Truck,     label: 'Transporte', href: '/admin' },
-  { icon: Flame,     label: 'Tostador',   href: '/admin' },
-  { icon: Coffee,    label: 'Cafetería',  href: '/' },
+  { icon: User,      label: 'Producer',    href: '/admin' },
+  { icon: Leaf,      label: 'Farm',        href: '/finca' },
+  { icon: Settings2, label: 'Wet Mill',    href: '/admin' },
+  { icon: Truck,     label: 'Transport',   href: '/admin' },
+  { icon: Flame,     label: 'Roaster',     href: '/admin' },
+  { icon: Coffee,    label: 'Coffee Shop', href: '/' },
 ]
 
 function AnimatedNumber({ target }: { target: number }) {
@@ -52,10 +52,10 @@ export default function HomeHero() {
   }, [])
 
   const statTiles = [
-    { icon: Coffee,  label: 'Cafeterías',   value: stats?.cafeterias ?? null },
-    { icon: Leaf,    label: 'Fincas',        value: stats?.fincas     ?? null },
-    { icon: Package, label: 'Lotes',         value: stats?.lotes      ?? null },
-    { icon: Award,   label: 'Prom. SCA',     value: stats?.avg_sca    ?? null, decimal: true },
+    { icon: Coffee,  label: 'Coffee Shops',  value: stats?.cafeterias ?? null },
+    { icon: Leaf,    label: 'Farms',         value: stats?.fincas     ?? null },
+    { icon: Package, label: 'Batches',       value: stats?.lotes      ?? null },
+    { icon: Award,   label: 'Avg. SCA',      value: stats?.avg_sca    ?? null, decimal: true },
   ]
 
   return (
@@ -64,11 +64,11 @@ export default function HomeHero() {
       <div className="home-hero">
         <div className="home-hero-left">
           <div className="hero-badge">
-            <Coffee size={11} /> Trazabilidad de café
+            <Coffee size={11} /> Coffee traceability
           </div>
-          <div className="home-hero-title">Conoce el origen<br />de cada taza</div>
+          <div className="home-hero-title">Know the origin<br />of every cup</div>
           <div className="home-hero-sub">
-            Rastrea la cadena completa del café especialidad en Guatemala — desde la finca hasta tu taza.
+            Trace the full specialty coffee chain in Guatemala — from the farm to your cup.
           </div>
         </div>
         <div className="home-stat-grid">
@@ -91,7 +91,7 @@ export default function HomeHero() {
 
       {/* ── Supply chain strip ── */}
       <div className="chain-strip">
-        <div className="chain-strip-label">Cadena de trazabilidad</div>
+        <div className="chain-strip-label">Traceability chain</div>
         <div className="chain-steps">
           {CHAIN_STEPS.map(({ icon: Icon, label, href }, i) => (
             <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
@@ -99,7 +99,7 @@ export default function HomeHero() {
                 className="chain-step"
                 style={{ '--i': i } as React.CSSProperties}
                 onClick={() => router.push(href)}
-                title={`Ver ${label}`}
+                title={`View ${label}`}
               >
                 <div className="chain-step-icon">
                   <Icon size={17} />

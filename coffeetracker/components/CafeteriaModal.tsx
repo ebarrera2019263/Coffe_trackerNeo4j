@@ -113,7 +113,7 @@ export default function CafeteriaModal({ cafeteria, lotes, loading, onClose }: P
                   <MapPin size={13} style={{ flexShrink: 0 }} /> {cafeteria.ciudad}
                 </span>
                 {cafeteria.precio_promedio_taza ? (
-                  <span className="precio-badge">Q{cafeteria.precio_promedio_taza}/taza</span>
+                  <span className="precio-badge">Q{cafeteria.precio_promedio_taza}/cup</span>
                 ) : null}
               </div>
               {metodos.length > 0 && (
@@ -149,7 +149,7 @@ export default function CafeteriaModal({ cafeteria, lotes, loading, onClose }: P
             fontSize: 11, fontWeight: 600, color: 'var(--text-mid)',
             textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 14,
           }}>
-            {loading ? 'Cargando lotes…' : `${lotes.length} ${lotes.length === 1 ? 'lote activo' : 'lotes activos'}`}
+            {loading ? 'Loading batches…' : `${lotes.length} ${lotes.length === 1 ? 'active batch' : 'active batches'}`}
           </div>
 
           {loading ? (
@@ -158,7 +158,7 @@ export default function CafeteriaModal({ cafeteria, lotes, loading, onClose }: P
             </div>
           ) : lotes.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--text-pale)', fontSize: 13.5 }}>
-              No hay lotes registrados para esta cafetería.
+              No batches registered for this coffee shop.
             </div>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
@@ -235,7 +235,7 @@ export default function CafeteriaModal({ cafeteria, lotes, loading, onClose }: P
                     onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85' }}
                     onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
                   >
-                    Ver trazabilidad
+                    View traceability
                     <ArrowRight size={13} style={{ flexShrink: 0 }} />
                   </button>
                 </div>

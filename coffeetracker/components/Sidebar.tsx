@@ -7,7 +7,7 @@ import { Coffee } from 'lucide-react'
 const navItems = [
   {
     href: '/',
-    label: 'Cafeterías',
+    label: 'Coffee Shops',
     icon: (
       <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor">
         <path d="M8 1L2 6v9h4v-5h4v5h4V6z" />
@@ -16,7 +16,7 @@ const navItems = [
   },
   {
     href: '/trazabilidad',
-    label: 'Trazabilidad',
+    label: 'Traceability',
     icon: (
       <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
         <circle cx="3" cy="8" r="2" />
@@ -29,7 +29,7 @@ const navItems = [
   },
   {
     href: '/finca',
-    label: 'Vista finca',
+    label: 'Farm view',
     icon: (
       <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
         <path d="M8 2C5 2 2 5 2 8s3 6 6 6 6-3 6-6-3-6-6-6z" />
@@ -39,7 +39,7 @@ const navItems = [
   },
   {
     href: '/impacto',
-    label: 'Impacto',
+    label: 'Impact',
     icon: (
       <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
         <path d="M8 2v4M8 10v4M2 8h4M10 8h4" />
@@ -49,7 +49,7 @@ const navItems = [
   },
   {
     href: '/admin',
-    label: 'Administración',
+    label: 'Administration',
     icon: (
       <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
         <rect x="2" y="2" width="5" height="5" rx="1" />
@@ -76,13 +76,13 @@ export default function Sidebar() {
           <div className="logo-cup"><Coffee size={18} color="#fff" /></div>
           <div>
             <div className="logo-name">CoffeTracker</div>
-            <div className="logo-tag">De finca a tu taza</div>
+            <div className="logo-tag">From farm to your cup</div>
           </div>
         </div>
       </div>
 
       <nav className="sidebar-nav">
-        <div className="nav-label">Explorar</div>
+        <div className="nav-label">Explore</div>
         {navItems.slice(0, 3).map((item) => (
           <Link
             key={item.href}
@@ -94,7 +94,7 @@ export default function Sidebar() {
           </Link>
         ))}
 
-        <div className="nav-label" style={{ marginTop: 8 }}>Análisis</div>
+        <div className="nav-label" style={{ marginTop: 8 }}>Analysis</div>
         {navItems.slice(3).map((item) => (
           <Link
             key={item.href}

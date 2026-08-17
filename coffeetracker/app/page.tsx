@@ -7,10 +7,10 @@ import CoffeeLoader from '@/components/CoffeeLoader'
 export default function HomePage() {
   return (
     <>
-      <Topbar title="Cafeterías" subtitle="Descubre el origen de tu café" />
+      <Topbar title="Coffee Shops" subtitle="Discover the origin of your coffee" />
       <div style={{ flex: 1, overflowY: 'auto' }}>
         <HomeHero />
-        <Suspense fallback={<CoffeeLoader text="Cargando cafeterías…" />}>
+        <Suspense fallback={<CoffeeLoader text="Loading coffee shops…" />}>
           <CafeteriasView />
         </Suspense>
       </div>
