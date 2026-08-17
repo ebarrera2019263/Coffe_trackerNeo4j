@@ -4,6 +4,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import Link from 'next/link'
 import { Coffee, Flame, Truck, Settings2, Leaf, User, AlertTriangle, Check, X } from 'lucide-react'
 import CoffeeLoader from './CoffeeLoader'
+import BatchQR from './BatchQR'
 import type { TrazabilidadData } from '@/types'
 
 function getProcesoCls(p: string) {
@@ -113,6 +114,7 @@ export default function TrazabilidadDetail({ loteId }: Props) {
             </span>
           </div>
         </div>
+        <BatchQR codigo={lote.codigo_lote} />
         <div className="journey-sca-big">
           <div className="journey-sca-num">{lote.puntaje_sca}</div>
           <div className="journey-sca-label">SCA Score</div>
